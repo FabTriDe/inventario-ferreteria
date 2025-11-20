@@ -1,0 +1,59 @@
+<div class="titulo-cuadro d-flex align-items-center mt-3 mb-5">
+    <img src="/catalogo.svg" alt="Ventas" class="title-icon">
+    <span class="texto-titulo">
+        {{tipoSeleccionado === 'todo' || !tipoSeleccionado ? 'Catálogo' : (`Catálogo - ${tipoSeleccionado}` | titlecase)
+        }}
+    </span>
+</div>
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <app-barra-busqueda (productosEncontrados)="recibirProductos($event)"></app-barra-busqueda>
+
+        <div class="row mt-5 mb-3">
+            <div class="col-12">
+                <app-filtros [registros]="registros" (registrosFiltrados)="actualizarRegistrosFiltrados($event)">
+                </app-filtros>
+            </div>
+        </div>
+
+        <div>
+            <div class="container-fluid mt-3">
+                <div class="grid-container">
+                    <div class="catalogo-item" *ngFor="let producto of registrosFiltrados"
+                        (click)="verImagenProducto(producto)">
+                        <img [src]="producto.imagen" class="product-image" alt="Imagen no disponible">
+                        <div class="card-body">
+                            <h5 class="bold mb-2">{{ producto.idProducto }}</h5>
+                            <h6 class="bold mb-2">{{ producto.nombre }}</h6>
+
+                            <div class="precios">
+                                <p class="fw-bold precio-normal">${{ producto.precio | numeroFormateado }}
+                                </p>
+                                <p *ngIf="producto.precioDescuento" class="fw-bold precio-descuento">
+                                    ${{ producto.precioDescuento | numeroFormateado }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-vender fw-semibold btn-dark"
+                            (click)="venderProducto(producto); $event.stopPropagation()">Vender</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal flotante -->
+    <app-vista-imagen-producto [mostrar]="mostrarImagenProducto" [producto]="productoSeleccionado"
+        (cerrar)="cerrarVistaImagen()" (vender)="venderProducto($event)">
+    </app-vista-imagen-producto>
+
+
+    <!-- Componente Modal-Ventas -->
+    <app-modal-ventas *ngIf="mostrarFormularioVenta" [producto]="productoParaVender" (cerrar)="cerrarVenta()"
+        (ventaRealizada)="ventaRealizada($event)">
+    </app-modal-ventas>

@@ -1,0 +1,14 @@
+<div *ngIf="visible" class="alerta" [ngClass]="tipo">
+    <p>{{ mensaje }}</p>
+
+    <div *ngIf="tipo === 'confirmacion'" class="botones">
+        <button class="btn-confirmar" (click)="confirmar()">Eliminar</button>
+        <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+    </div>
+
+    <div *ngIf="tipo === 'imprimir'" class="botones">
+        <button class="btn-imprimir" (click)="confirmar()">Imprimir</button>
+        <button class="btn-imprimir-copia" (click)="imprimirConCopia()">Imprimir con Copia</button>
+        <button class="btn-solo-vender" (click)="cancelar()">Solo vender</button>
+    </div>
+</div>

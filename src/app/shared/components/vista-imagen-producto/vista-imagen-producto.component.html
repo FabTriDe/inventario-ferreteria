@@ -1,0 +1,20 @@
+<div *ngIf="mostrar" class="modal-flotante">
+    <div class="modal-contenido p-3 rounded-4 position-relative text-center">
+        <button class="btn-close position-absolute top-0 end-0 m-2" (click)="cerrar.emit()"></button>
+
+        <h4 class="bold mb-2">{{ producto?.idProducto }}</h4>
+
+        <img [src]="producto?.imagen" alt="Imagen del producto" class="img-fluid rounded mb-3 producto-img" />
+
+        <h4 class="bold mb-1">{{ producto?.nombre }}</h4>
+        <p class="fw-semibold text-muted mb-0">Precio: ${{ producto?.precio | numeroFormateado }}</p>
+        <p *ngIf="producto?.precioDescuento" class="fw-semibold text-muted mb-0">
+            Precio Descuento: ${{ producto?.precioDescuento | numeroFormateado }}
+        </p>
+        <p class="fw-semibold text-muted">Cantidad: {{ producto?.cantidad }}</p>
+
+        <button *ngIf="mostrarBotonVenta" class="btn fw-semibold btn-dark" (click)="vender.emit(producto)">
+            Vender
+        </button>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle shadow-sm tabla-base">
+        <thead class="table-dark">
+            <tr>
+                <th *ngFor="let col of columnas" class="text-center">{{ col.titulo }}</th>
+                <th *ngIf="mostrarEditar || mostrarEliminar || botonExtra" class="text-center">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let fila of datos; let i = index" [class.bg-light]="i % 2 === 0">
+                <td *ngFor="let col of columnas">
+                    <!-- Modo edición -->
+                    <ng-container *ngIf="enEdicion(fila) && col.editable; else modoLectura">
+                        <ng-container [ngSwitch]="true">
+                            <select *ngSwitchCase="!!col.opciones" [(ngModel)]="filaEditando[col.campo]"
+                                class="form-select form-select-sm">
+                                <option *ngFor="let op of col.opciones" [value]="op.valor">
+                                    {{ op.nombre }}
+                                </option>
+                            </select>
+
+                            <input *ngSwitchCase="col.tipo === 'number'" type="number"
+                                [(ngModel)]="filaEditando[col.campo]" class="form-control form-control-sm" />
+
+                            <input *ngSwitchDefault [(ngModel)]="filaEditando[col.campo]"
+                                class="form-control form-control-sm" />
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- Modo lectura -->
+                    <ng-template #modoLectura>
+                        <!-- Texto con formato Titlecase -->
+                        <span *ngIf="col.formato === 'titlecase'">
+                            {{ fila[col.campo] | titlecase }}
+                        </span>
+
+                        <!-- Fechas -->
+                        <span *ngIf="col.formato === 'date'">
+                            {{ fila[col.campo] | fechaHora }}
+                        </span>
+
+                        <!-- Números con formato normal -->
+                        <span *ngIf="col.formato === 'numero'">
+                            {{ fila[col.campo] | numeroFormateado }}
+                        </span>
+
+                        <!-- Monedas -->
+                        <span *ngIf="col.formato === 'currency'">
+                            {{ fila[col.campo] | numeroFormateado:{ moneda: true, simbolo: '$' } }}
+                        </span>
+
+                        <!-- Valor por defecto (sin formato especial) -->
+                        <span *ngIf="!col.formato">
+                            {{ fila[col.campo] }}
+                        </span>
+                    </ng-template>
+                </td>
+
+                <!-- Acciones -->
+                <td class="text-center acciones-cell">
+                    <div class="d-flex justify-content-center gap-2">
+
+                        <button *ngIf="botonExtra && !enEdicion(fila)" class="btn btn-sm"
+                            [ngClass]="botonExtra.color || 'btn-info'" [title]="botonExtra.tooltip"
+                            (click)="emitirExtra(botonExtra.accion, fila)">
+                            <i [class]="botonExtra.icono"></i> {{ botonExtra.texto || '' }}
+                        </button>
+
+                        <button *ngIf="!enEdicion(fila) && mostrarEditar" class="btn btn-warning btn-sm"
+                            (click)="activarEdicion(fila)">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </button>
+
+                        <button *ngIf="!enEdicion(fila) && mostrarEliminar" class="btn btn-danger btn-sm"
+                            (click)="emitirEliminar(fila)">
+                            <i class="bi bi-trash3"></i> Eliminar </button>
+
+                        <ng-container *ngIf="enEdicion(fila)">
+                            <button class="btn btn-success btn-sm" (click)="guardarEdicion()">
+                                <i class="bi bi-check2"></i> Guardar</button>
+
+                            <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion()">
+                                <i class="bi bi-x-lg"></i> Cancelar</button>
+
+                        </ng-container>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

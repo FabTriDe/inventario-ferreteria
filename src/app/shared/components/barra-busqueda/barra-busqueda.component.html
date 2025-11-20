@@ -1,0 +1,28 @@
+<div class="row justify-content-center">
+    <div class="col-md-8 search-container">
+
+        <div class="input-group search-bar">
+            <span class="input-group-text search-icon" (click)="buscarProducto()">
+                <img src="lupa.svg" alt="Buscar" class="icon-img" />
+            </span>
+
+            <div class="separator-container">
+                <div class="separator"></div>
+            </div>
+
+            <input #inputBusqueda type="text" [(ngModel)]="idProductoBuscar" (input)="filtrarProductos()"
+                (keydown.enter)="buscarProducto()" placeholder="Ingrese el Codigo o Nombre del Producto"
+                class="form-control search-input" />
+        </div>
+
+        <select *ngIf="productosFiltrados.length > 0" class="custom-select"
+            [attr.size]="productosFiltrados.length > 6 ? 6 : (productosFiltrados.length < 2 ? 2 : productosFiltrados.length)"
+            [(ngModel)]="idProductoBuscar" (keydown.enter)="buscarProducto()"
+            (change)="buscarProducto(); idProductoBuscar=''; productosFiltrados=[]">
+            <option *ngFor="let producto of productosFiltrados" [value]="producto.idProducto">
+                [{{ producto.idProducto }}] - {{ producto.nombre }}
+            </option>
+        </select>
+
+    </div>
+</div>

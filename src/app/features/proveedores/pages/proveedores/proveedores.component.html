@@ -1,0 +1,49 @@
+<!-- Botón para abrir modal de lista de proveedores -->
+<button class="btn btn-info me-3" (click)="abrirModalProveedores()">
+    Mostrar Proveedores
+</button>
+
+<!-- Modal de lista de proveedores (flotante y centrado) -->
+<div *ngIf="mostrarListaProveedores" class="modal-overlay">
+    <div class="modal-tabla-contenido p-4 rounded position-relative shadow-lg">
+        <button class="btn-close position-absolute top-0 end-0 m-3" (click)="cerrarModalProveedores()"></button>
+        <h2 class="text-center mb-4">Lista de Proveedores</h2>
+
+        <div class="tabla-scroll">
+            <!-- Tabla Base -->
+            <app-tabla-base [columnas]="columnas" [datos]="proveedores" [filaEditando]="proveedorEditando"
+                [campoId]="'idProveedor'" (editar)="onEditar($event)" (guardar)="onGuardar()" (cancelar)="onCancelar()"
+                (eliminar)="onEliminar($event)">
+            </app-tabla-base>
+        </div>
+    </div>
+</div>
+
+<!-- Botón para abrir modal de agregar proveedor -->
+<button class="btn btn-primary" (click)="mostrarProveedorForm = true">
+    Agregar Proveedor
+</button>
+
+<!-- Modal para agregar proveedor -->
+<div *ngIf="mostrarProveedorForm" class="modal-overlay">
+    <div class="modal-contenido p-4 rounded shadow-lg position-relative">
+        <button class="btn-close position-absolute top-0 end-0 m-3" (click)="mostrarProveedorForm = false"></button>
+        <h2 class="text-center mb-4">Agregar Proveedor</h2>
+
+        <form [formGroup]="proveedorForm" (ngSubmit)="agregarProveedor()">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" formControlName="nombreProveedor" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">NIT</label>
+                <input type="text" formControlName="nit" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success w-100" [disabled]="!proveedorForm.valid">
+                Guardar
+            </button>
+        </form>
+    </div>
+</div>

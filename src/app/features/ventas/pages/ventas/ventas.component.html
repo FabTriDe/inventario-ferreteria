@@ -1,0 +1,65 @@
+<div class="titulo-cuadro d-flex align-items-center m-2 mt-3">
+    <img src="/venta.svg" alt="Ventas" class="title-icon">
+    <span class="texto-titulo">Ventas</span>
+</div>
+
+<div class="d-flex justify-content-end text-end mb-3 mt-5">
+    <button (click)="mostrarFormulario = true" class="btn btn-success">
+        Agregar Venta
+    </button>
+</div>
+
+<app-tabla-base [datos]="registros" [columnas]="columnas" [campoId]="'idVenta'" [filaEditando]="ventaEditando"
+    (editar)="onEditar($event)" (guardar)="onGuardar()" (cancelar)="onCancelar()" (eliminar)="onEliminar($event)">
+</app-tabla-base>
+
+<div class="container w-100">
+
+    <!-- Modal flotante para agregar venta -->
+    <div *ngIf="mostrarFormulario" class="modal-flotante">
+        <div class="modal-contenido p-4 rounded-4">
+            <button class="btn-close" (click)="mostrarFormulario = false"></button>
+
+            <h2 class="text-center mb-4">Agregar Venta</h2>
+
+            <form [formGroup]="ventaForm" (ngSubmit)="agregarRegistro()">
+                <div class="form-group text-start">
+                    <label class="form-label fw-bold">Producto</label>
+                    <input type="text" class="form-control" formControlName="idProductoVenta"
+                        (input)="onProductoInput($event)" list="productosList" (change)="actualizarPrecioUnitario()" />
+                    <datalist id="productosList">
+                        <option *ngFor="let producto of productosFiltrados" [value]="producto.idProducto">
+                            {{ producto.nombre }} - Cantidad: {{ producto.cantidad }}
+                        </option>
+                    </datalist>
+                </div>
+
+                <div class="form-check form-switch mt-3 mb-3 text-start" *ngIf="productoSeleccionado?.precioDescuento">
+                    <input type="checkbox" class="form-check-input" id="descuento" formControlName="descuento"
+                        (change)="toggleDescuento()" />
+                    <label class="form-check-label" for="descuento">Aplicar descuento</label>
+                </div>
+
+                <div class="form-group text-start">
+                    <label class="form-label fw-bold">Cantidad</label>
+                    <input type="number" formControlName="cantidad" (input)="calcularPrecioTotal()" class="form-control"
+                        step="0.01" min="0" required />
+                </div>
+
+                <div class="form-group text-start">
+                    <label class="form-label fw-bold">Valor Unitario</label>
+                    <input type="text" formControlName="valorUnitario" class="form-control" [disabled]="true" />
+                </div>
+
+                <div class="form-group text-start">
+                    <label class="form-label fw-bold">Precio Total</label>
+                    <input type="text" formControlName="precioTotal" class="form-control" [disabled]="true" />
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!ventaForm.valid">
+                    Guardar Venta
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,284 @@
+/* 🔔 Estilo general del recuadro */
+.alerta {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 99999; /* se asegura de estar sobre todo */
+  min-width: 280px;
+  max-width: 400px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.alerta::before {
+  display: flex;
+  align-items: center;
+}
+
+.alerta p {
+  margin: 0;
+  display: flex;
+  align-items: center; /* 🔹 centra verticalmente el texto con el icono */
+}
+
+
+/* 🎨 Colores según tipo */
+.alerta.error {
+  background: linear-gradient(135deg, #ff4b4b, #d93838);
+  color: white;
+}
+
+.alerta.exito {
+  background: linear-gradient(135deg, #43a047, #2e7d32); /* verde medio → verde oscuro */
+  color: white;
+}
+
+.alerta.info {
+  background: linear-gradient(135deg, #3b7dd8, #2a5ea0); /* azul medio → azul oscuro */
+  color: white;
+}
+
+.alerta.advertencia {
+  background: linear-gradient(135deg, #f57c00, #e65100); /* naranja medio → naranja más oscuro */
+  color: white;
+}
+
+/* 💨 Animación de entrada */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 💨 Animación de salida (opcional si quieres que desaparezca suave) */
+@keyframes fadeSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* 🔘 Ícono opcional */
+.alerta.error::before {
+  content: "⚠️";
+  font-size: 18px;
+}
+
+.alerta.exito::before {
+  content: "✅";
+}
+
+.alerta.info::before {
+  content: "ℹ️";
+}
+
+.alerta.advertencia::before {
+  content: "⚠️";
+}
+
+/* 🔔 Confirmación */
+.alerta.confirmacion {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #fff;
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  padding: 16px 20px;
+  width: 320px;
+  height: fit-content;
+  border: 1px solid #ddd;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* Línea de ícono + texto del <p> */
+.alerta.confirmacion p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 17px; /* 🔹 Subido de 15px a 17px */
+  text-align: center;
+}
+
+
+/* Ícono a la izquierda del texto */
+.alerta.confirmacion p::before {
+  content: "⚠️";
+  font-size: 18px;
+}
+
+/* Contenedor de botones */
+.alerta.confirmacion .botones {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botones */
+.btn-confirmar,
+.btn-cancelar {
+  flex: 1;
+  font-weight: 600;
+  border: none;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-confirmar {
+  background-color: #dc3545; /* rojo para eliminar */
+  color: white;
+}
+
+.btn-cancelar {
+  background-color: #d3d3d3; /* gris claro para cancelar */
+  color: black; /* mejor contraste sobre gris */
+}
+
+
+.btn-confirmar:hover,
+.btn-cancelar:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* 🔔 Confirmación impresión*/
+/* 🔔 Alerta especial para impresión */
+.alerta.imprimir {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #fff;
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  padding: 20px 22px; /* espacio interior equilibrado */
+  max-width: 90vw; /* 🔹 se adapta al ancho de la pantalla */
+  width: fit-content; /* 🔹 se ajusta al contenido real */
+  height: fit-content;
+  border: 1px solid #ddd;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* 🔸 Texto del mensaje */
+.alerta.imprimir p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+}
+
+/* 🔸 Ícono a la izquierda del texto */
+.alerta.imprimir p::before {
+  content: "ℹ️";
+  font-size: 20px;
+}
+
+/* 🔸 Contenedor de botones */
+.alerta.imprimir .botones {
+  display: flex;
+  justify-content: center; /* 🔹 centrados en el recuadro */
+  align-items: center;
+  gap: 16px; /* 🔹 espacio entre ellos */
+  flex-wrap: wrap; /* 🔹 si no caben, bajan a otra línea */
+  width: 100%;
+  max-width: 100%;
+}
+
+.btn-imprimir {
+  flex: 1.1; /* 🔹 un poco más ancho proporcionalmente */
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px; /* 🔹 más alto y con más espacio lateral */
+  border-radius: 6px; /* 🔹 bordes un poco más suaves */
+  cursor: pointer;
+  background-color: #43a047; /* verde */
+  color: white;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-solo-vender {
+  flex: 1.2; /* 🔹 un poco más ancho proporcionalmente */
+  min-width: 130px; /* mayor tamaño base */
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px; /* 🔹 más alto y con más espacio lateral */
+  border-radius: 6px; /* 🔹 bordes un poco más suaves */
+  cursor: pointer;
+  background-color: #d3d3d3e5; /* gris claro para cancelar */
+  color: black; /* mejor contraste sobre gris */
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-imprimir-copia {
+  flex: 1.2; /* un poco más ancho que los demás */
+  min-width: 180px; /* mayor tamaño base */
+  font-weight: 600;
+  border: none;
+  padding: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #2d6ffd; /* verde más oscuro para diferenciar */
+  color: white;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-imprimir:hover,
+.btn-imprimir-copia:hover,
+.btn-solo-vender:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+
+/* Animación */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+

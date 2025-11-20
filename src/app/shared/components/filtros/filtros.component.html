@@ -1,0 +1,40 @@
+<div class="d-flex flex-wrap align-items-center gap-3">
+    <!-- Filtro tipo -->
+    <div class="d-flex align-items-center gap-2">
+        <img src="filtro.svg" class="img-filtro" alt="icono filtro" />
+        <span class="texto-filtrar fw-bold">Filtrar por:</span>
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="categoriasDropdown"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ tipoSeleccionado ? (tipoSeleccionado | titlecase) : 'Seleccionar tipo' }}
+            </button>
+            <ul class="dropdown-menu minimal-dropdown" aria-labelledby="categoriasDropdown">
+                <li class="item-dropdown" *ngFor="let tipoFiltro of tiposFiltro">
+                    <a class="dropdown-item custom-item"
+                        (click)="tipoSeleccionado = tipoFiltro.valor; onFiltroChange()">
+                        {{ tipoFiltro.nombre }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Filtro orden -->
+    <div class="d-flex align-items-center gap-2">
+        <img src="orden.svg" class="img-orden" alt="icono orden" />
+        <span class="texto-filtrar fw-bold">Ordenar por:</span>
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="ordenDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ ordenSeleccionado ? ordenNombres[ordenSeleccionado] : 'Seleccionar Orden' }}
+            </button>
+            <ul class="dropdown-menu minimal-dropdown" aria-labelledby="ordenDropdown">
+                <li class="item-dropdown" *ngFor="let orden of ordenNombres | keyvalue">
+                    <a class="dropdown-item custom-item" (click)="ordenSeleccionado = orden.key; onFiltroChange()">
+                        {{ orden.value }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

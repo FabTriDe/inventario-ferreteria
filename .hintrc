@@ -23,7 +23,8 @@
       {
         "ignore": [
           "backdrop-filter",
-          "-webkit-text-size-adjust"
+          "-webkit-text-size-adjust",
+          "-moz-appearance"
         ]
       }
     ]

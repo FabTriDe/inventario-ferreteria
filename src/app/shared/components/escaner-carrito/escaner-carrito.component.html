@@ -1,0 +1,153 @@
+<div class="container mt-3">
+
+    <div class="titulo-cuadro d-flex align-items-center">
+        <img src="/barrasescaner.svg" alt="Escaner" class="title-icon">
+        <span class="texto-titulo">Escaner</span>
+    </div>
+</div>
+
+<div class="carrito-container mt-5">
+
+    <div class="mb-5">
+        <!-- Barra de búsqueda -->
+        <app-barra-busqueda [modoCarrito]="true" (productoEncontrado)="agregarAlCarrito($event)" class="hidden-barra">
+        </app-barra-busqueda>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between gap-2 mt-2">
+
+        <!-- Botón a la izquierda -->
+        <div class=" mb-1" *ngIf="productosEnCarrito.length > 0">
+            <button (click)="venderProductos()"
+                class="btn btn-dark btn-vender fw-semibold px-4 py-2 rounded position-relative">
+                Vender
+            </button>
+        </div>
+
+        <!-- Total a la derecha -->
+        <div class="precio-total-carrito pt-3 text-end" *ngIf="productosEnCarrito.length > 0">
+            <p class="fw-bold fs-5 mb-2 text-dark">
+                Total compra:
+                <span class="fw-bold text-dark fs-4">${{ calcularTotalCarrito() }}</span>
+            </p>
+        </div>
+
+    </div>
+
+    <app-vista-imagen-producto [mostrar]="modalImagen" [producto]="productoSeleccionado" (cerrar)="cerrarVistaImagen()"
+        [mostrarBotonVenta]="false"></app-vista-imagen-producto>
+
+    <!-- Productos en carrito -->
+    <div *ngIf="productosEnCarrito.length > 0; else carritoVacio" class="productos-lista d-flex flex-column gap-3">
+
+        <div *ngFor="let item of productosEnCarrito"
+            class="producto-item d-flex align-items-start gap-3 p-3 border rounded-3 bg-white shadow-sm">
+
+            <!-- Imagen -->
+            <!-- Imagen como botón -->
+            <div class="producto-imagen">
+                <button (click)="abrirImagen(item)" class="imagen-boton">
+                    <img [src]="item.imagen || 'assets/placeholder.png'" alt="{{ item.nombre }}" class="producto-img">
+                </button>
+            </div>
+
+
+            <!-- Información del producto -->
+            <div class="producto-info flex-grow-1 d-flex flex-column">
+
+                <!-- Nombre más grande -->
+                <p class="producto-nombre fw-bold text-dark mb-2">{{ item.nombre }}</p>
+
+                <!-- Precios debajo del nombre -->
+                <div class="d-flex flex-wrap gap-3 mb-2">
+                    <div>
+                        <span class="fw-semibold text-dark">Precio:</span>
+                        <span class="fw-bold text-dark fs-6"> ${{ item.precio }}</span>
+                    </div>
+
+                    <div *ngIf="item.precioDescuento">
+                        <span class="fw-semibold text-dark">Descuento:</span>
+                        <span class="fw-bold text-dark fs-6"> ${{ item.precioDescuento }}</span>
+                    </div>
+                    <div>
+                        <span class="fw-semibold text-dark">Cantidad:</span>
+                        <span class="fw-bold text-dark fs-6"> {{ item.cantidad }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Parte derecha: toggle, cantidad + total y papelera -->
+            <div class="d-flex align-items-start gap-2 mt-2">
+
+                <!-- Toggle descuento -->
+                <div class="form-check form-switch producto-descuento" *ngIf="item.precioDescuento">
+                    <input type="checkbox" [(ngModel)]="item.aplicarDescuento" class="form-check-input custom-toggle-sm"
+                        id="toggle-{{item.idProducto}}" (change)="devolverFocoBarra()">
+                    <label class="form-check-label fw-semibold text-dark ms-1 fs-6" for="toggle-{{item.idProducto}}">
+                        Aplicar descuento
+                    </label>
+                </div>
+
+                <!-- Cantidad + total en columna -->
+                <div class="d-flex flex-column align-items-end">
+                    <!-- Cantidad -->
+                    <div class="producto-cantidad d-flex align-items-center gap-2">
+                        <button (click)="cambiarCantidad(item, -1)" class="btn btn-light btn-sm">-</button>
+                        <input type="number" [(ngModel)]="item.cantidadVender" min="1"
+                            (keydown.enter)="devolverFocoBarra()" class="form-control form-control-sm cantidad-carrito">
+                        <button (click)="cambiarCantidad(item, 1)" class="btn btn-light btn-sm">+</button>
+                    </div>
+
+
+
+                    <!-- Total individual debajo de cantidad, ligeramente hacia la derecha -->
+                    <div class="mt-1">
+                        <span class="fw-semibold text-dark">Total:</span>
+                        <span class="fw-bold text-dark fs-6">
+                            ${{ (aplicarDescuento(item) ? item.precioDescuento : item.precio) * item.cantidadVender }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Papelera a la derecha de la fila -->
+                <div class="d-flex align-items-center ms-auto">
+                    <button (click)="eliminarProductoCarrito(item)" class="btn-eliminar" title="Eliminar producto">
+                        <img src="papelera.svg" alt="Eliminar" />
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Carrito vacío -->
+    <ng-template #carritoVacio>
+        <div class="alert alert-secondary text-center rounded-3 shadow-sm py-4">
+            <span class="fw-semibold fs-5 text-dark">No hay productos en el carrito.</span>
+        </div>
+
+        <div class="alert alert-secondary text-center rounded-3 shadow-sm py-4">
+            <span class="fw-bold fs-5 text-dark">Instrucciones de uso.</span>
+        </div>
+
+        <div class="alert alert-secondary text-center rounded-3 shadow-sm py-4">
+            <span class="fw-semibold fs-5 text-dark">Escanee el código de barras del producto para meterlo al
+                carrito, cada vez que lo escanee se aumentará la cantidad a una unidad más.</span>
+        </div>
+
+        <div class="alert alert-secondary text-center rounded-3 shadow-sm py-4">
+            <span class="fw-semibold fs-5 text-dark">Puede volver a escanear un producto en cualquier momento para
+                aumentar la cantidad a vender, no importa si ya escanéo otros.</span>
+        </div>
+
+        <div class="alert alert-secondary text-center rounded-3 shadow-sm py-4">
+            <span class="fw-semibold fs-5 text-dark">Puede escanear mas de un producto diferente.</span>
+        </div>
+
+
+    </ng-template>
+
+</div>

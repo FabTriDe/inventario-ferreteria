@@ -1,0 +1,63 @@
+<div class="titulo-cuadro d-flex align-items-center m-2 mt-3">
+    <img src="/facturas.svg" alt="Facturas" class="title-icon" />
+    <span class="texto-titulo">Facturas</span>
+</div>
+
+<div class="container w-100">
+    <div class="d-flex justify-content-between mb-3 mt-5">
+        <app-proveedores></app-proveedores>
+
+        <button class="btn btn-success" (click)="mostrarFormulario = true">
+            Agregar Factura
+        </button>
+    </div>
+
+    <!-- Modal flotante para agregar factura -->
+    <div *ngIf="mostrarFormulario" class="modal-flotante">
+        <div class="modal-contenido p-4 rounded">
+            <button class="btn-close float-end" (click)="mostrarFormulario = false"></button>
+            <h2 class="text-center mb-4">Agregar Factura</h2>
+
+            <form [formGroup]="facturaForm" (ngSubmit)="agregarRegistro()">
+                <div class="mb-3">
+                    <label class="form-label">Código</label>
+                    <input type="text" formControlName="codigo" class="form-control" />
+                </div>
+
+                <!-- Select de proveedores -->
+                <div class="mb-3">
+                    <label class="form-label">Proveedor</label>
+                    <select class="form-select" formControlName="proveedorId" (change)="actualizarNit($event)">
+                        <option value="">Seleccione un proveedor</option>
+                        <option *ngFor="let proveedor of proveedores" [value]="proveedor.idProveedor">
+                            {{ proveedor.nombreProveedor }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- El NIT se llena automáticamente -->
+                <div class="mb-3">
+                    <label class="form-label">NIT</label>
+                    <input type="text" class="form-control" [value]="nitSeleccionado" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Valor</label>
+                    <input type="number" formControlName="valorFactura" class="form-control" step="0.01" min="0" />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" [disabled]="!facturaForm.valid">
+                    Agregar Factura
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla Base -->
+    <div class="tabla-scroll">
+        <app-tabla-base [columnas]="columnas" [datos]="registros" [filaEditando]="facturaEditando"
+            [campoId]="'idFactura'" (editar)="iniciarEdicion($event)" (guardar)="guardarEdicion()"
+            (cancelar)="cancelarEdicion()" (eliminar)="onEliminar($event)">
+        </app-tabla-base>
+    </div>
+</div>
