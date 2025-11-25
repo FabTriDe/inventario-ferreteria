@@ -59,6 +59,11 @@ export class FacturasComponent implements OnInit {
       valorFactura: [0, [Validators.required, Validators.min(0.01)]],
       fechaFactura: [new Date(), Validators.required],
     });
+
+    this.proveedoresService.proveedoresActualizados$.subscribe(() => {
+      console.log('Recargando proveedores...');
+      this.cargarProveedores();
+    });
   }
 
   ngOnInit(): void {
@@ -70,7 +75,7 @@ export class FacturasComponent implements OnInit {
   cargarFacturas(): void {
     this.facturasService.obtenerFacturas().subscribe({
       next: (data) => {
-        console.log('📦 Facturas que llegan del backend:', data);
+        console.log('Facturas que llegan del backend:', data);
 
         this.registros = data.map((f: any) => ({
           ...f,
@@ -84,7 +89,25 @@ export class FacturasComponent implements OnInit {
   // Carga proveedores (para select y mostrar NIT)
   cargarProveedores(): void {
     this.proveedoresService.getAll().subscribe({
-      next: (data) => (this.proveedores = data),
+      next: (data) => {
+        this.proveedores = data;
+
+        // Si el proveedor seleccionado ya no existe, limpiar NIT
+        const existe = this.proveedores.some(
+          (p) => p.idProveedor == this.facturaForm.value.proveedorId
+        );
+
+        if (!existe) {
+          this.facturaForm.patchValue({ proveedorId: '' });
+          this.nitSeleccionado = '';
+        } else {
+          // 👉 Si existe, actualizar el NIT al nuevo valor (en caso de edición)
+          const proveedor = this.proveedores.find(
+            (p) => p.idProveedor == this.facturaForm.value.proveedorId
+          );
+          this.nitSeleccionado = proveedor ? proveedor.nit : '';
+        }
+      },
       error: (err) => console.error('Error al cargar proveedores', err),
     });
   }

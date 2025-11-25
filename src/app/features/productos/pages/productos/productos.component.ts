@@ -33,7 +33,7 @@ export class ProductosComponent {
   registrosFiltrados: any[] = [];
   mostrarFormulario = false;
   tablaSeleccionada: string = 'productos';
-  tipoSeleccionado: string = '';
+
   ordenSeleccionado: string = '';
   selectedFile: File | null = null;
   mostrarImagenProducto = false;
@@ -82,11 +82,20 @@ export class ProductosComponent {
     },
     {
       campo: 'precioDescuento',
-      titulo: 'Precio Descuento',
+      titulo: 'Descuento',
       tipo: 'number',
       formato: 'currency',
       editable: true,
     },
+
+    {
+      campo: 'precioCompra',
+      titulo: 'Sale a',
+      tipo: 'number',
+      formato: 'currency',
+      editable: true,
+    },
+
     {
       campo: 'cantidad',
       titulo: 'Cantidad',
@@ -106,18 +115,12 @@ export class ProductosComponent {
   };
 
   productoForm: FormGroup;
-  ventaForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private productoServicio: ProductosService,
     private alertasService: AlertasService
   ) {
-    this.productoServicio.selectedOption$.subscribe((option) => {
-      this.tipoSeleccionado = option;
-      this.obtenerRegistros();
-    });
-
     // Formulario para productos
     this.productoForm = this.fb.group({
       idProducto: [{ value: '', disabled: true }],
@@ -125,17 +128,11 @@ export class ProductosComponent {
       tipo: ['', Validators.required],
       precio: ['', [Validators.required, Validators.min(1)]],
       precioDescuento: [null],
+      precioCompra: [null],
       cantidad: ['', Validators.required],
     });
-
-    // Formulario para ventas
-    this.ventaForm = this.fb.group({
-      idVenta: ['', Validators.required],
-      cliente: ['', Validators.required],
-      fecha: ['', Validators.required],
-      total: ['', [Validators.required, Validators.min(1)]],
-    });
   }
+
   ngOnInit() {
     this.obtenerRegistros();
     this.productoServicio.onProductosActualizados().subscribe(() => {

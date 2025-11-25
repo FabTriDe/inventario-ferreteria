@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Proveedor } from '../../features/proveedores/models/proveedores.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProveedoresService {
   private apiUrl = 'http://localhost:3000/api/proveedores';
+  proveedoresActualizados$ = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {}
 
@@ -29,5 +30,9 @@ export class ProveedoresService {
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  notificarCambios() {
+    this.proveedoresActualizados$.next(true);
   }
 }

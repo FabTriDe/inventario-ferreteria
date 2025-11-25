@@ -7,6 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProductosService } from '../../../core/services/productos.service';
 
 @Component({
   selector: 'app-filtros',
@@ -15,8 +16,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './filtros.component.css',
 })
 export class FiltrosComponent implements OnChanges {
-  @Input() registros: any[] = []; // recibe los productos desde el padre
-  @Output() registrosFiltrados = new EventEmitter<any[]>(); // devuelve los productos ordenados o filtrados
+  @Input() registros: any[] = [];
+  @Output() registrosFiltrados = new EventEmitter<any[]>();
 
   tiposFiltro = [
     { valor: 'todo', nombre: 'Todo' },
@@ -38,6 +39,8 @@ export class FiltrosComponent implements OnChanges {
     idMayor: 'Codigo Descendente',
     precioMenor: 'Menor Precio',
     precioMayor: 'Mayor Precio',
+    precioCompraMenor: 'Menor Precio Compra',
+    precioCompraMayor: 'Mayor Precio Compra',
     cantidadMenor: 'Menor Cantidad',
     cantidadMayor: 'Mayor Cantidad',
   };
@@ -45,9 +48,19 @@ export class FiltrosComponent implements OnChanges {
   tipoSeleccionado = 'todo';
   ordenSeleccionado = 'idMayor';
 
+  constructor(private productoServicio: ProductosService) {
+    // 🔥 SUSCRIPCIÓN AL SIDEBAR
+    this.productoServicio.selectedOption$.subscribe((tipoSidebar) => {
+      if (!tipoSidebar) return;
+
+      this.tipoSeleccionado = tipoSidebar; // cambia el tipo automáticamente
+      this.aplicarOrden(); // vuelve a filtrar y ordenar
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['registros'] && this.registros.length > 0) {
-      this.aplicarOrden(); // ✅ Se ejecuta cada vez que llegan o cambian los registros
+      this.aplicarOrden();
     }
   }
 
@@ -57,46 +70,50 @@ export class FiltrosComponent implements OnChanges {
       return match ? parseInt(match[0], 10) : 0;
     };
 
-    let lista = [...this.registros]; // copia para no modificar directamente
+    const safe = (v: any) => (v === null || v === undefined ? 0 : v);
 
-    if (this.ordenSeleccionado !== '') {
-      switch (this.ordenSeleccionado) {
-        case 'precioMenor':
-          lista.sort((a, b) => a.precio - b.precio);
-          break;
-        case 'precioMayor':
-          lista.sort((a, b) => b.precio - a.precio);
-          break;
-        case 'cantidadMenor':
-          lista.sort((a, b) => a.cantidad - b.cantidad);
-          break;
-        case 'cantidadMayor':
-          lista.sort((a, b) => b.cantidad - a.cantidad);
-          break;
-        case 'idMenor':
-          lista.sort(
-            (a, b) =>
-              obtenerNumeroID(a.idProducto) - obtenerNumeroID(b.idProducto)
-          );
-          break;
-        case 'idMayor':
-          lista.sort(
-            (a, b) =>
-              obtenerNumeroID(b.idProducto) - obtenerNumeroID(a.idProducto)
-          );
-          break;
-      }
+    let lista = [...this.registros];
+
+    switch (this.ordenSeleccionado) {
+      case 'precioMenor':
+        lista.sort((a, b) => safe(a.precio) - safe(b.precio));
+        break;
+      case 'precioMayor':
+        lista.sort((a, b) => safe(b.precio) - safe(a.precio));
+        break;
+      case 'precioCompraMenor':
+        lista.sort((a, b) => safe(a.precioCompra) - safe(b.precioCompra));
+        break;
+      case 'precioCompraMayor':
+        lista.sort((a, b) => safe(b.precioCompra) - safe(a.precioCompra));
+        break;
+      case 'cantidadMenor':
+        lista.sort((a, b) => safe(a.cantidad) - safe(b.cantidad));
+        break;
+      case 'cantidadMayor':
+        lista.sort((a, b) => safe(b.cantidad) - safe(a.cantidad));
+        break;
+      case 'idMenor':
+        lista.sort(
+          (a, b) =>
+            obtenerNumeroID(a.idProducto) - obtenerNumeroID(b.idProducto)
+        );
+        break;
+      case 'idMayor':
+        lista.sort(
+          (a, b) =>
+            obtenerNumeroID(b.idProducto) - obtenerNumeroID(a.idProducto)
+        );
+        break;
     }
 
-    // Si hay tipo seleccionado (y no es "todo"), filtra
-    if (this.tipoSeleccionado && this.tipoSeleccionado !== 'todo') {
+    if (this.tipoSeleccionado !== 'todo') {
       lista = lista.filter(
         (item) =>
-          item.tipo.toLowerCase() === this.tipoSeleccionado.toLowerCase()
+          item.tipo?.toLowerCase() === this.tipoSeleccionado.toLowerCase()
       );
     }
 
-    // Emitimos el resultado final al padre
     this.registrosFiltrados.emit(lista);
   }
 

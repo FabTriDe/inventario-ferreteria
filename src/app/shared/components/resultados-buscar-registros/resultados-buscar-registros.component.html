@@ -26,7 +26,8 @@
                         <th>Nombre</th>
                         <th>Tipo</th>
                         <th>Precio</th>
-                        <th>Precio Descuento</th>
+                        <th>Descuento</th>
+                        <th>Sale a</th>
                         <th>Cantidad</th>
                         <th>Acciones</th>
                     </tr>
@@ -71,8 +72,23 @@
                             <input *ngIf="productoEncontrado.editando" [(ngModel)]="productoEncontrado.precioDescuento"
                                 type="number" class="form-control" />
                             <span *ngIf="!productoEncontrado.editando">
-                                ${{ productoEncontrado.precioDescuento ? (productoEncontrado.precioDescuento |
-                                number:'1.0-0') : 'N/A' }}
+                                {{
+                                productoEncontrado.precioDescuento == null || productoEncontrado.precioDescuento === 0
+                                ? 'N/A'
+                                : ('$' + (productoEncontrado.precioDescuento | number:'1.0-0'))
+                                }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <input *ngIf="productoEncontrado.editando" [(ngModel)]="productoEncontrado.precioCompra"
+                                type="number" class="form-control" />
+                            <span *ngIf="!productoEncontrado.editando">
+                                {{
+                                productoEncontrado.precioCompra == null || productoEncontrado.precioCompra === 0
+                                ? 'N/A'
+                                : ('$' + (productoEncontrado.precioCompra | number:'1.0-2'))
+                                }}
                             </span>
                         </td>
 
@@ -141,7 +157,8 @@
                         <th>Nombre</th>
                         <th>Tipo</th>
                         <th>Precio</th>
-                        <th>Precio Descuento</th>
+                        <th>Descuento</th>
+                        <th>Sale a</th>
                         <th>Cantidad</th>
                         <th>Acciones</th>
                     </tr>
@@ -184,7 +201,23 @@
                             <input *ngIf="producto.editando" [(ngModel)]="producto.precioDescuento" type="number"
                                 class="form-control" />
                             <span *ngIf="!producto.editando">
-                                ${{ producto.precioDescuento ? (producto.precioDescuento | number:'1.0-0') : 'N/A' }}
+                                {{
+                                producto.precioDescuento == null || producto.precioDescuento === 0
+                                ? 'N/A'
+                                : ('$' + (producto.precioDescuento | number:'1.0-0'))
+                                }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <input *ngIf="producto.editando" [(ngModel)]="producto.precioCompra" type="number"
+                                class="form-control" />
+                            <span *ngIf="!producto.editando">
+                                {{
+                                producto.precioCompra == null || producto.precioCompra === 0
+                                ? 'N/A'
+                                : ('$' + (producto.precioCompra | number:'1.0-2'))
+                                }}
                             </span>
                         </td>
 

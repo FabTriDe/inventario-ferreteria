@@ -14,6 +14,11 @@ export class ProductosService {
 
   constructor(private http: HttpClient) {}
 
+  updateSelectedOption(option: string) {
+    //Se usa en navbar.
+    this.selectedOptionSource.next(option);
+  }
+
   emitirActualizacion() {
     //Se usa en varios features y en componentes artificiales. Buscar, escaner, productos y proveedores.
     this.productosActualizados.next();
@@ -22,11 +27,6 @@ export class ProductosService {
   onProductosActualizados(): Observable<void> {
     //Se usa en barra busqueda, va ligado con el de arriba.
     return this.productosActualizados.asObservable();
-  }
-
-  updateSelectedOption(option: string) {
-    //Se usa en navbar.
-    this.selectedOptionSource.next(option);
   }
 
   onProductoCreado(): Observable<void> {

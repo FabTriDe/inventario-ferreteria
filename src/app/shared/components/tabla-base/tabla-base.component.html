@@ -49,8 +49,13 @@
 
                         <!-- Monedas -->
                         <span *ngIf="col.formato === 'currency'">
-                            {{ fila[col.campo] | numeroFormateado:{ moneda: true, simbolo: '$' } }}
+                            {{
+                            fila[col.campo] == null || fila [col.campo] === 0
+                            ? 'N/A'
+                            : (fila[col.campo] | numeroFormateado:{ moneda: true, simbolo: '$' })
+                            }}
                         </span>
+
 
                         <!-- Valor por defecto (sin formato especial) -->
                         <span *ngIf="!col.formato">

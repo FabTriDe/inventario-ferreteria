@@ -81,6 +81,7 @@ export class ProveedoresComponent {
           this.mostrarProveedorForm = false;
           this.proveedorForm.reset();
           this.obtenerProveedores();
+          this.proveedorService.notificarCambios();
         },
         error: (err) => {
           if (err.error?.error?.includes('Duplicate')) {
@@ -124,6 +125,7 @@ export class ProveedoresComponent {
           this.obtenerProveedores();
           this.proveedorEditando = null;
           this.alertasService.mostrar('Proveedor editado con éxito', 'exito');
+          this.proveedorService.notificarCambios();
         },
         error: (err) => {
           console.error('Error al editar proveedor', err);
@@ -157,6 +159,7 @@ export class ProveedoresComponent {
                 'Proveedor eliminado con éxito.',
                 'exito'
               );
+              this.proveedorService.notificarCambios();
             },
             error: () => {
               this.alertasService.mostrar(
