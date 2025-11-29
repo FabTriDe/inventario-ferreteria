@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-    <div class="col-md-8 search-container">
+    <div class="col-md-9 search-container">
 
         <div class="input-group search-bar">
             <span class="input-group-text search-icon" (click)="buscarProducto()">
@@ -20,8 +20,10 @@
             [(ngModel)]="idProductoBuscar" (keydown.enter)="buscarProducto()"
             (change)="buscarProducto(); idProductoBuscar=''; productosFiltrados=[]">
             <option *ngFor="let producto of productosFiltrados" [value]="producto.idProducto">
-                [{{ producto.idProducto }}] - {{ producto.nombre }}
+                [{{ producto.idProducto }}] - {{ producto.nombre }} - Precio: ${{ producto.precio }}
+                {{ producto.precioDescuento ? (' - Descuento: $' + producto.precioDescuento) : '' }}
             </option>
+
         </select>
 
     </div>
